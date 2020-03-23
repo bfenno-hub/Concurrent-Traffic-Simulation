@@ -74,10 +74,6 @@ std::vector<std::shared_ptr<Street>> Intersection::queryStreets(std::shared_ptr<
 void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
 {
   
-  //	std::cout << "The vehicle " << vehicle->getID() << " current destination is " << this << std::endl;
-   // std::cout << "The traffic light that is at the vehicles destination is" << &_trafficLight << std::endl;
-  
-  
   
     std::unique_lock<std::mutex> lck(_mtx);
     std::cout << "Intersection #" << _id << "::addVehicleToQueue: thread id = " << std::this_thread::get_id() << std::endl;
@@ -90,21 +86,12 @@ void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
 
     // wait until the vehicle is allowed to enter
     ftrVehicleAllowedToEnter.wait();
-    lck.lock();
-     
-  	//std::cout << "hello?" << std::endl;
+    
     // FP.6b : use the methods TrafficLight::getCurrentPhase and TrafficLight::waitForGreen to block the execution until the traffic light turns green.
     if (_trafficLight.getCurrentPhase() == TrafficLight::red){
-      //	std::cout << "vehicle " << vehicle->getID() << " has to wait for the green light." << std::endl;
         _trafficLight.waitForGreen();
     }
-  //	std::cout << "The vehicle " << vehicle->getID() << " current destination is " << this << std::endl;
-  //  std::cout << "The traffic light that is at the vehicles destination is" << &_trafficLight << std::endl;
-  //	std::cout<< "vehicle: " << vehicle->getID() << " current phase of traffic light is: " << _trafficLight.getCurrentPhase() << std::endl;
-  
-  //  std::cout << "Intersection #" << _id << ": Vehicle #" << vehicle->getID() << " is granted entry." << std::endl;
     
-    lck.unlock();
 }
 
 void Intersection::vehicleHasLeft(std::shared_ptr<Vehicle> vehicle)

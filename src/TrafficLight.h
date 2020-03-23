@@ -23,11 +23,12 @@ public:
     MessageQueue() {}
 
     T receive();
-    void send(T&& m, TrafficLight* p);
+    void send(T&& m);
 	void clear();
 
-	std::deque<T> _queue; // list of all vehicles waiting to enter this intersection
+	 // list of all vehicles waiting to enter this intersection
 private:
+    std::deque<T> _queue;   
     std::mutex _mutex;
     std::condition_variable _condition;
     
@@ -63,10 +64,7 @@ private:
     // and use it within the infinite loop to push each new TrafficLightPhase into it by calling 
     // send in conjunction with move semantics.
     MessageQueue<TrafficLightPhase> _messageQueue;
-
-    std::condition_variable _condition;
-    std::mutex _mutex;
-    
+    std::mutex _lmutex; //for shared access to _currentPhase
     TrafficLightPhase _currentPhase;
 };
 
